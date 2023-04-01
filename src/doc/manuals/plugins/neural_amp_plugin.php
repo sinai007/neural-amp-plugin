@@ -1,6 +1,6 @@
 <?php
 	plugin_header();
-	$m      =   ($PAGE == 'plugin_template_mono') ? 'm' : 's';
+	$m      =   ($PAGE == 'neural_amp_plugin_mono') ? 'm' : 's';
 ?>
 
 <p>

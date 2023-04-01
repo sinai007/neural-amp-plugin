@@ -2,21 +2,21 @@
  * Copyright (C) 2020 Linux Studio Plugins Project <https://lsp-plug.in/>
  *           (C) 2020 Vladimir Sadovnikov <sadko4u@gmail.com>
  *
- * This file is part of lsp-plugins-plugin-template
+ * This file is part of jea-plugins-neural-amp-plugin
  * Created on: 25 нояб. 2020 г.
  *
- * lsp-plugins-plugin-template is free software: you can redistribute it and/or modify
+ * jea-plugins-neural-amp-plugin is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * lsp-plugins-plugin-template is distributed in the hope that it will be useful,
+ * jea-plugins-neural-amp-plugin is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with lsp-plugins-plugin-template. If not, see <https://www.gnu.org/licenses/>.
+ * along with jea-plugins-neural-amp-plugin. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <lsp-plug.in/common/alloc.h>
@@ -25,7 +25,7 @@
 #include <lsp-plug.in/dsp-units/units.h>
 #include <lsp-plug.in/plug-fw/meta/func.h>
 
-#include <private/plugins/plugin_template.h>
+#include <private/plugins/neural_amp_plugin.h>
 
 /* The size of temporary buffer for audio processing */
 #define BUFFER_SIZE         0x1000U
@@ -44,20 +44,20 @@ namespace lsp
         // Plugin factory
         static const meta::plugin_t *plugins[] =
         {
-            &meta::plugin_template_mono,
-            &meta::plugin_template_stereo
+            &meta::neural_amp_plugin_mono,
+            &meta::neural_amp_plugin_stereo
         };
 
         static plug::Module *plugin_factory(const meta::plugin_t *meta)
         {
-            return new plugin_template(meta);
+            return new neural_amp_plugin(meta);
         }
 
         static plug::Factory factory(plugin_factory, plugins, 2);
 
         //---------------------------------------------------------------------
         // Implementation
-        plugin_template::plugin_template(const meta::plugin_t *meta):
+        neural_amp_plugin::neural_amp_plugin(const meta::plugin_t *meta):
             Module(meta)
         {
             // Compute the number of audio channels by the number of inputs
@@ -76,12 +76,12 @@ namespace lsp
             pData           = NULL;
         }
 
-        plugin_template::~plugin_template()
+        neural_amp_plugin::~neural_amp_plugin()
         {
             destroy();
         }
 
-        void plugin_template::init(plug::IWrapper *wrapper, plug::IPort **ports)
+        void neural_amp_plugin::init(plug::IWrapper *wrapper, plug::IPort **ports)
         {
             // Call parent class for initialization
             Module::init(wrapper, ports);
@@ -184,7 +184,7 @@ namespace lsp
             }
         }
 
-        void plugin_template::destroy()
+        void neural_amp_plugin::destroy()
         {
             Module::destroy();
 
@@ -209,18 +209,18 @@ namespace lsp
             }
         }
 
-        void plugin_template::update_sample_rate(long sr)
+        void neural_amp_plugin::update_sample_rate(long sr)
         {
             // Update sample rate for the bypass processors
             for (size_t i=0; i<nChannels; ++i)
             {
                 channel_t *c    = &vChannels[i];
-                c->sLine.init(dspu::millis_to_samples(sr, meta::plugin_template::DELAY_OUT_MAX_TIME));
+                c->sLine.init(dspu::millis_to_samples(sr, meta::neural_amp_plugin::DELAY_OUT_MAX_TIME));
                 c->sBypass.init(sr);
             }
         }
 
-        void plugin_template::update_settings()
+        void neural_amp_plugin::update_settings()
         {
             float out_gain          = pGainOut->value();
             bool bypass             = pBypass->value() >= 0.5f;
@@ -240,7 +240,7 @@ namespace lsp
             }
         }
 
-        void plugin_template::process(size_t samples)
+        void neural_amp_plugin::process(size_t samples)
         {
             // Process each channel independently
             for (size_t i=0; i<nChannels; ++i)
@@ -298,7 +298,7 @@ namespace lsp
             }
         }
 
-        void plugin_template::dump(dspu::IStateDumper *v) const
+        void neural_amp_plugin::dump(dspu::IStateDumper *v) const
         {
             // It is very useful to dump plugin state for debug purposes
             v->write("nChannels", nChannels);

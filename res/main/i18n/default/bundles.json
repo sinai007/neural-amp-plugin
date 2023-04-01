@@ -1,5 +1,5 @@
 {
-	"plugin_template": {
+	"neural_amp_plugin": {
 		"name": "Plugin Template",
 		"description": "TODO: write description"
 	}
